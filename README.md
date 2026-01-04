@@ -150,4 +150,4 @@ groups:
 
 ## License
 
-MIT
+GPLv3
