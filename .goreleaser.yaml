@@ -1,0 +1,65 @@
+version: 2
+
+project_name: immich-prometheus-exporter
+
+builds:
+  - main: ./cmd/immich-prometheus-exporter
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+dockers:
+  - image_templates:
+      - "ghcr.io/victorarias/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/victorarias/{{ .ProjectName }}:latest-amd64"
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+    dockerfile: Dockerfile
+    goarch: amd64
+    extra_files:
+      - cmd
+      - internal
+
+  - image_templates:
+      - "ghcr.io/victorarias/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/victorarias/{{ .ProjectName }}:latest-arm64"
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+    dockerfile: Dockerfile
+    goarch: arm64
+    extra_files:
+      - cmd
+      - internal
+
+docker_manifests:
+  - name_template: "ghcr.io/victorarias/{{ .ProjectName }}:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/victorarias/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/victorarias/{{ .ProjectName }}:{{ .Version }}-arm64"
+
+  - name_template: "ghcr.io/victorarias/{{ .ProjectName }}:latest"
+    image_templates:
+      - "ghcr.io/victorarias/{{ .ProjectName }}:latest-amd64"
+      - "ghcr.io/victorarias/{{ .ProjectName }}:latest-arm64"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
