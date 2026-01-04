@@ -17,5 +17,5 @@ clean:
 run: build
 	./immich-prometheus-exporter
 
-docker:
+docker: build
 	docker build -t immich-prometheus-exporter:local .

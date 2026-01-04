@@ -30,9 +30,6 @@ dockers:
       - "--platform=linux/amd64"
     dockerfile: Dockerfile
     goarch: amd64
-    extra_files:
-      - cmd
-      - internal
 
   - image_templates:
       - "ghcr.io/victorarias/{{ .ProjectName }}:{{ .Version }}-arm64"
@@ -42,9 +39,6 @@ dockers:
       - "--platform=linux/arm64"
     dockerfile: Dockerfile
     goarch: arm64
-    extra_files:
-      - cmd
-      - internal
 
 docker_manifests:
   - name_template: "ghcr.io/victorarias/{{ .ProjectName }}:{{ .Version }}"
